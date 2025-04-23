@@ -1,78 +1,133 @@
-This is the Official repository of **Java Spring Boot AI Full Stack Microservices Course: Building Fitness Application**
+# Fitness App Microservices
 
-# The Ultimate Java and Spring Boot Mastery Roadmap
+> A full‑stack fitness tracking application built with Spring Boot microservices, React frontend, and AI‑powered recommendations.
 
-Welcome to your one-stop-shop for mastering Java and Spring Boot! This repository offers a comprehensive learning experience with high-quality resources and community support. Dive into over 150+ hours of premium content, with everything you need to excel at Java and Spring Boot development.
+![Architecture Diagram](docs/architecture.png)
 
-## 🎓 Learning Roadmap
+---
 
-Most of the courses below are available in **Udemy For Business**, so if you have subscription - you can get FREE access.
-Here’s a structured path to enhance your skills with detailed courses available:
+## Table of Contents
+1. [Project Overview](#project-overview)
+2. [Features](#features)
+3. [Tech Stack](#tech-stack)
+4. [Prerequisites](#prerequisites)
+5. [Getting Started](#getting-started)
+   - [Clone Repository](#clone-repository)
+   - [Configuration](#configuration)
+   - [Running Services](#running-services)
+6. [Microservice Modules](#microservice-modules)
+7. [API Endpoints](#api-endpoints)
+8. [Frontend Usage](#frontend-usage)
+9. [Contributing](#contributing)
+10. [License](#license)
 
-1. **[Spring Boot By Building Complex Projects Step by Step](https://link.embarkx.com/spring-boot) (85+ Hours of Content)**
-2. **[Master Spring Boot Microservices by Building eCommerce Project](https://link.embarkx.com/microservices) (55+ Hours of Content)**
-3. **[Learn Java with 60+ Hours of Content](http://link.embarkx.com/java) (60+ Hours of Content)**
-4. **[Master Spring Security with React JS + OAuth2](https://link.embarkx.com/spring-security) (34+ Hours of Content)**
-5. **[Master IntelliJ IDEA](http://link.embarkx.com/intellij) (3+ Hours of Content)**
+---
 
+## Project Overview
+This project demonstrates how to build a resilient, scalable fitness tracking platform using a microservices architecture. Key capabilities include:
+- **User Management** with secure authentication/authorization via Keycloak (OAuth2/PKCE).
+- **Activity Tracking** storing workouts and health metrics in MongoDB.
+- **AI Recommendations** powered by Google Gemini to deliver personalized fitness tips.
+- **Event‑Driven Communication** using RabbitMQ for decoupled, asynchronous processing.
+- **Service Discovery & Config** via Spring Cloud Eureka and Config Server.
+- **API Gateway** for a unified entry point and routing.
+- **React Frontend** with real‑time data visualization and forms.
 
-## 🌟 With All Our Courses You Gain Access To
+## Features
+- Secure user signup/login, profile management
+- Create, read, update, delete fitness activities
+- Real‑time AI‑powered suggestions after each activity
+- Asynchronous messaging for high throughput
+- Centralized configuration and dynamic service discovery
+- Responsive React UI with OAuth2/PKCE flow
 
-- 📝 **Notes:** Detailed and downloadable notes to accompany each lesson.
-- 💻 **Source Code:** Full access to the source code used in the tutorials.
-- 🤔 **Doubt Solving:** Responsive instructor and community support.
-- 🎥 **High-Quality HD Videos:** Easy to understand, high-definition video tutorials.
-- 🔄 **Free Lifetime Updates:** Continuous updates to course content at no extra cost.
+## Tech Stack
+| Layer           | Technology                   |
+|-----------------|------------------------------|
+| Backend         | Java, Spring Boot, Spring Cloud (Eureka, Config, Gateway) |
+| Security        | Keycloak, OAuth2 / PKCE      |
+| Messaging       | RabbitMQ (Spring AMQP)       |
+| Databases       | PostgreSQL (User data), MongoDB (Activities, AI data) |
+| AI Integration  | Google Gemini API            |
+| Frontend        | React, Vite, React Router, react-oauth2-code-pkce |
+| DevOps & CI/CD  | Docker, Maven, GitHub Actions |
 
-## 📚 Why Choose This Mastery Series?
+## Prerequisites
+- Java 17+ and Maven 3.8+
+- Node.js 16+ and npm/yarn
+- Docker & Docker Compose
+- Keycloak server (v17+)
+- RabbitMQ broker
+- PostgreSQL & MongoDB instances
+- Google Cloud API key for Gemini
 
-With this series, you're not just learning; you're preparing to dominate the field of Java and Spring Boot development. Our structured learning path ensures that you build your skills progressively, with each course designed to build on the knowledge gained from the previous one.
+## Getting Started
 
-### Join Us Now!
+### Clone Repository
+```bash
+git clone https://github.com/EmbarkXOfficial/fitness-app-microservices.git
+cd fitness-app-microservices
+```
 
-Start your journey today to become a master at Java and Spring Boot. Our community and expert instructors are here to support your learning every step of the way. **Enroll and start building your future, today!**
+### Configuration
+1. Copy `.env.example` to `.env` and fill in credentials:
+   ```ini
+   KEYCLOAK_URL=
+   KEYCLOAK_REALM=
+   KEYCLOAK_CLIENT_ID=
+   DB_POSTGRES_URL=jdbc:postgresql://localhost:5432/users
+   DB_POSTGRES_USERNAME=
+   DB_POSTGRES_PASSWORD=
+   DB_MONGO_URI=mongodb://localhost:27017/activities
+   RABBITMQ_HOST=localhost
+   GEMINI_API_KEY=
+   ```
+2. Update `configserver/src/main/resources/application.yml` for your environment.
 
+### Running Services
+Use Docker Compose to launch infrastructure:
+```bash
+docker-compose up -d postgres mongo rabbitmq keycloak
+```
 
+Start each Spring Boot service (in separate terminals or via your IDE):
+```bash
+cd eureka-server && mvn spring-boot:run
+cd configserver && mvn spring-boot:run
+cd gateway && mvn spring-boot:run
+cd userservice && mvn spring-boot:run
+cd activityservice && mvn spring-boot:run
+cd aiservice && mvn spring-boot:run
+```
 
+## Microservice Modules
+- **eureka-server**: Service registry
+- **configserver**: Centralized configuration
+- **gateway**: API gateway with routing & security
+- **userservice**: Manages user profiles (PostgreSQL)
+- **activityservice**: Stores activities (MongoDB)
+- **aiservice**: Generates recommendations (Google Gemini)
 
+## API Endpoints
+| Service         | Endpoint                         | Method | Description                         |
+|-----------------|----------------------------------|--------|-------------------------------------|
+| User Service    | `/api/users/register`            | POST   | Register new user                   |
+|                 | `/api/users/{id}`                | GET    | Get user profile                    |
+| Activity Service| `/api/activities`                | POST   | Create new activity                 |
+|                 | `/api/activities/{id}`           | GET    | Fetch activity by ID                |
+| AI Service      | `/api/recommendations/{userId}`  | GET    | Get AI‑powered fitness tips         |
 
-# Usage Policy for Course Materials
+## Frontend Usage
+1. Navigate to `fitness-app-frontend`
+2. Install dependencies: `npm install`
+3. Start dev server: `npm run dev`
+4. Open `http://localhost:3000`
 
-## Instructor Information
-
-**Instructor:** Faisal Memon  
-**Company:** [EmbarkX.com](http://www.embarkx.com)
-
-## Policy Overview
-
-This document outlines the guidelines and restrictions concerning the use of course materials provided by EmbarkX, including but not limited to PDF presentations, code samples, and video tutorials.
-
-### 1. Personal Use Only
-
-The materials provided in this course are intended for **your personal use only**. They are to be used solely for the purpose of learning and completing this course.
-
-### 2. No Unauthorized Sharing or Distribution
-
-You are **not permitted** to share, distribute, or publicly post any course materials on any websites, social media platforms, or other public forums without prior written consent from the instructor.
-
-### 3. Intellectual Property
-
-All course materials are protected by copyright laws and are the intellectual property of Faisal Memon and EmbarkX. Unauthorized use, reproduction, or distribution of these materials is **strictly prohibited**.
-
-### 4. Reporting Violations
-
-If you become aware of any unauthorized sharing or distribution of course materials, please report it immediately to [embarkxofficial@gmail.com](mailto:embarkxofficial@gmail.com).
-
-### 5. Legal Action
-
-We reserve the right to take legal action against individuals or entities found to be violating this usage policy.
-
-## Thank You
-
-Thank you for respecting these guidelines and helping us maintain the integrity of our course materials.
-
-## Contact Information
-
-- **Email:** [embarkxofficial@gmail.com](mailto:embarkxofficial@gmail.com)
-- **Website:** [www.embarkx.com](http://www.embarkx.com)
+## Contributing
+Contributions are welcome! Please:
+1. Fork the repo
+2. Create a feature branch (`git checkout -b feature/XYZ`)
+3. Commit your changes (`git commit -m "Add XYZ"`)
+4. Push to branch (`git push origin feature/XYZ`)
+5. Open a Pull Request
 
